@@ -1,0 +1,317 @@
+basePath: /
+definitions:
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  todo_list_sber.TodoItem:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_done:
+        type: boolean
+      title:
+        type: string
+    type: object
+  todo_list_sber.UpdateItemInput:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      is_done:
+        type: boolean
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server Todo server.
+  title: Todo List API
+  version: "1.0"
+paths:
+  /api/todo:
+    get:
+      consumes:
+      - application/json
+      description: get all todos
+      operationId: get-all-todo-items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/todo_list_sber.TodoItem'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getAllTodoItems
+    post:
+      consumes:
+      - application/json
+      description: 'create todo item date example: 2024-06-07T12:00:00Z'
+      operationId: create-todo-item
+      parameters:
+      - description: todo info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/todo_list_sber.TodoItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: createTodoItem
+  /api/todo/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete todo item
+      operationId: delete-todo-item
+      parameters:
+      - description: get todo by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: deleteTodoItem
+    get:
+      consumes:
+      - application/json
+      description: get todo item by id
+      operationId: get-todo-item-by-id
+      parameters:
+      - description: get todo by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo_list_sber.TodoItem'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getTodoItemById
+    put:
+      consumes:
+      - application/json
+      description: update todo item
+      operationId: update-todo-item
+      parameters:
+      - description: get todo by id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: todo info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/todo_list_sber.UpdateItemInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: updateTodoItem
+  /api/todo/done:
+    get:
+      consumes:
+      - application/json
+      description: get done todos by date with pagination
+      operationId: get-done-todo-items
+      parameters:
+      - description: Date in format YYYY-MM-DD
+        in: query
+        name: date
+        type: string
+      - description: Limit of items to return
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset of items to return
+        in: query
+        name: offset
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/todo_list_sber.TodoItem'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getDoneTodoItems
+      tags:
+      - get by is_done
+  /api/todo/undone:
+    get:
+      consumes:
+      - application/json
+      description: get undone todos by date with pagination
+      operationId: get-undone-todo-items
+      parameters:
+      - description: Date in format YYYY-MM-DD
+        in: query
+        name: date
+        type: string
+      - description: Limit of items to return
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset of items to return
+        in: query
+        name: offset
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/todo_list_sber.TodoItem'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getUndoneTodoItems
+      tags:
+      - get by is_done
+swagger: "2.0"

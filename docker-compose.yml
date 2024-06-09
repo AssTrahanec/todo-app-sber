@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  todo-list-postgres:
+    image: "postgres:9.6-alpine"
+    container_name: todo-list-postgres
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - SSLMode=disabled
+
+  todo-list-app:
+    build: .
+    container_name: todo-list-app
+    environment:
+      - DB_SERVER=todo-list-postgres
+    ports:
+      - 8080:8080
+    links:
+      - todo-list-postgres
